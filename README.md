@@ -6,31 +6,34 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of diagnosticos-pp is to …
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## Carregando o banco de dados
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+`%>%` <- magrittr::`%>%`
+saude <- readr::read_rds("data/saude.rds") %>% 
+  dplyr::mutate(tipo = stringr::str_to_lower(tipo))
+dplyr::glimpse(saude)
+#> Rows: 315
+#> Columns: 7
+#> $ cidade  <chr> "Bauru", "Bauru", "Bauru", "Bauru", "Bauru", "Bauru", "Bauru",~
+#> $ ano     <dbl> 2015, 2015, 2015, 2015, 2015, 2016, 2016, 2016, 2016, 2016, 20~
+#> $ id      <chr> "2_4", "5_9", "adolecentes", "adultos", "idosos", "2_4", "5_9"~
+#> $ tipo    <chr> "ultra", "ultra", "ultra", "ultra", "ultra", "ultra", "ultra",~
+#> $ total   <dbl> 56, 46, 145, 687, 311, 181, 123, 369, 2390, 1444, 220, 270, 56~
+#> $ amostra <dbl> 52, 42, 131, 512, 193, 163, 113, 340, 1889, 965, 201, 251, 517~
+#> $ perc    <dbl> 0.9285714, 0.9130435, 0.9034483, 0.7452693, 0.6205788, 0.90055~
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+## Visualizando a série temporal
 
-You can also embed plots, for example:
+``` r
+saude %>% 
+  ggplot2::ggplot(ggplot2::aes(x=ano,y=perc,color=id))+
+  #ggplot2::geom_col(position = "dodge")+
+  ggplot2::geom_line() +
+  ggplot2::facet_wrap(~tipo,ncol=3)+
+  ggplot2::scale_color_viridis_d()+
+  ggplot2::theme_classic()
+```
 
-![](README_files/figure-gfm/pressure-1.png)<!-- -->
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub.
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->

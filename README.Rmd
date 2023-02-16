@@ -7,6 +7,7 @@ output: github_document
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  warning = FALSE,message = FALSE,error = FALSE,
   comment = "#>"
 )
 ```
@@ -16,20 +17,25 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of diagnosticos-pp is to ...
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
+## Carregando o banco de dados
+```{r}
+`%>%` <- magrittr::`%>%`
+saude <- readr::read_rds("data/saude.rds") %>% 
+  dplyr::mutate(tipo = stringr::str_to_lower(tipo))
+dplyr::glimpse(saude)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
+## Visualizando a série temporal
+```{r}
+saude %>% 
+  ggplot2::ggplot(ggplot2::aes(x=ano,y=perc,color=id))+
+  #ggplot2::geom_col(position = "dodge")+
+  ggplot2::geom_line() +
+  ggplot2::facet_wrap(~tipo,ncol=3)+
+  ggplot2::scale_color_viridis_d()+
+  ggplot2::theme_classic()
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub.
+
+
+

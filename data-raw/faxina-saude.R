@@ -2,26 +2,31 @@
 library(tidyverse)
 library(readxl)
 library(janitor)
+library(readr)
 
 ## Pegando os nomes dos arquivos
-names_files <- list.files("data/saude/")
+names_files <- list.files("data-raw/saude/")
 
 ## pegando os nomes das planilhas
-sheets <- readxl::excel_sheets(paste0("data/saude/",names_files[1]))
+sheets <- readxl::excel_sheets(paste0("data-raw/saude/",names_files[1]))
 
 ## retirando a mãe da leitura
 ftr <- !sheets == "mae"
 sheets <- sheets[-ftr]
 
 ## craindo o banco de dados auxiliar
-for(i in 1:2){
+for(i in 1:9){
   plan <- sheets[i]
-  da <- read_xlsx(paste0("data/saude/",names_files[1]),
+  da <- read_xlsx(paste0("data-raw/saude/",names_files[1]),
                   sheet = plan) %>%
     clean_names()
 
   # arrumando o nome
-  if(plan == "ultra") names(da) <- names(da) %>% str_replace("pro1","ultra")
+  if(plan == "ultra") {
+    names(da) <- names(da) %>% str_replace("pro1","ultra")
+    names(da) <- names(da) %>% str_replace("adolecentes_ultra",
+                                           "anosadolecentes_ultra")
+  }
   if(plan == "proces1"){
     names(da) <- names(da) %>% str_replace("_gl","pro1")
     names(da) <- names(da) %>% str_replace("adolecentes_pro1",
@@ -65,13 +70,10 @@ for(i in 1:2){
     pivot_longer(cols = contains("total"),
                  names_to = "id",
                  values_to = "total") %>%
-    mutate(
-      id = str_replace(id, "adolecentes_ultra", ## <== ajustar pra cima
-                       "anosadolecentes_ultra") ## <== ajustar para cima
-    ) %>% filter(
+    filter(
       !str_detect(id, 'anos')
     ) %>%
-    mutate(id = str_remove_all(id,"total_|total|_ultra_|_vl_|vl_|_pro1_|_frutas_|_gl_|_3r_|_bd_|_eb_|eb_|eb|feijao_")) %>%
+    mutate(id = str_remove_all(id,"total_|total|ultra_|_ultra_|_vl_|vl_|_pro1_|pro1_|_frutas_|frutas_|_gl_|gl_|_3r_|3r_|_bd_|bd_|_eb_|eb_|eb|feijao_")) %>%
     rename(amostra = total)
 
   da_t <- da %>%
@@ -80,13 +82,10 @@ for(i in 1:2){
     pivot_longer(cols = contains("total"),
                  names_to = "id",
                  values_to = "total") %>%
-    mutate(
-      id = str_replace(id, "adolecentes_ultra",
-                       "anosadolecentes_ultra")
-    ) %>% filter(
+    filter(
       str_detect(id, 'anos')
     ) %>%
-    mutate(id = str_remove_all(id,"(total_|cri_|crianca_|anos_|anos|_anos|_ultra|ultra|_vl|vl_|vl|pro1|_pro1|frutas|_frutas|_gl|3r_|3r|de_|_bd|_eb_|eb_|eb|e_b|_eb|feijao|_feijao)"))
+    mutate(id = str_remove_all(id,"(total_|cri_|crianca_|anos_|anos|_anos|_ultra|ultra|_vl|vl_|vl|pro1|_pro1|frutas|_frutas|_gl|gl|3r_|3r|de_|_bd|bd|_eb_|eb_|eb|e_b|_eb|feijao|_feijao)"))
 
   if(i == 1) {
     final <- left_join(da_t,da_a,by=c("cidade","ano","id")) %>%
@@ -100,7 +99,10 @@ for(i in 1:2){
       relocate(cidade,ano,id,tipo)
     final <- rbind(final,auxiliar)
   }
-}; final
+}; View(final)
+
+## salvando o banco de dados
+# write_rds(final,"data/saude.rds")
 
 
 
