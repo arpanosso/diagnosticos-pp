@@ -105,7 +105,7 @@ for(i in 1:9){
 # write_rds(final,"data/saude.rds")
 
 
-
+readr::read_rds("data-raw/estado_nutricional.rds")
 
 
 
