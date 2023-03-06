@@ -33,7 +33,8 @@ cri_PI <- estado_nutricional %>%
     municipio = X5
   )
 cri_PI %>%  glimpse()
-
+readr::write_rds(cri_PI,"data/cri_peso_idade.rds")
+writexl::write_xlsx(cri_PI,"data/cri_peso_idade.xlsx")
 
 cri_PA <- estado_nutricional %>%
   filter(fase_da_vida == "Criança",
@@ -63,7 +64,8 @@ cri_PA <- estado_nutricional %>%
     municipio = X5
   )
 cri_PA %>%  glimpse()
-
+readr::write_rds(cri_PA,"data/cri_peso_altura.rds")
+writexl::write_xlsx(cri_PA,"data/cri_peso_altura.xlsx")
 
 cri_AI <- estado_nutricional %>%
   filter(fase_da_vida == "Criança",
@@ -87,7 +89,8 @@ cri_AI <- estado_nutricional %>%
     municipio = X5
   )
 cri_AI %>%  glimpse()
-
+readr::write_rds(cri_AI,"data/cri_altura_idade.rds")
+writexl::write_xlsx(cri_AI,"data/cri_altura_idade.xlsx")
 
 cri_IMC <- estado_nutricional %>%
   filter(fase_da_vida == "Criança",
@@ -117,6 +120,8 @@ cri_IMC <- estado_nutricional %>%
     municipio = X5
   )
 cri_IMC %>%  glimpse()
+readr::write_rds(cri_IMC,"data/cri_imc.rds")
+writexl::write_xlsx(cri_IMC,"data/cri_imc.xlsx")
 
 # adolescente -------------------------------------------------------------
 adol_AI <- estado_nutricional %>%
@@ -141,7 +146,8 @@ adol_AI <- estado_nutricional %>%
     municipio = X5
   )
 adol_AI %>%  glimpse()
-
+readr::write_rds(adol_AI,"data/adolescente_altura_idade.rds")
+writexl::write_xlsx(adol_AI,"data/adolescente_altura_idade.xlsx")
 
 adol_IMC <- estado_nutricional %>%
   filter(fase_da_vida == "Adolescente",
@@ -171,7 +177,8 @@ adol_IMC <- estado_nutricional %>%
     municipio = X5
   )
 adol_IMC %>%  glimpse()
-
+readr::write_rds(adol_IMC,"data/adolescente_imc.rds")
+writexl::write_xlsx(adol_IMC,"data/adolescente_imc.xlsx")
 
 # adultos -----------------------------------------------------------------
 adulto_IMC <- estado_nutricional %>%
@@ -201,6 +208,8 @@ adulto_IMC <- estado_nutricional %>%
     municipio = X5
   )
 adulto_IMC %>%  glimpse()
+readr::write_rds(adulto_IMC,"data/adulto_imc.rds")
+writexl::write_xlsx(adulto_IMC,"data/adulto_imc.xlsx")
 
 # Idosos ------------------------------------------------------------------
 idoso_IMC <- estado_nutricional %>%
@@ -224,3 +233,5 @@ idoso_IMC <- estado_nutricional %>%
     municipio = X5
   )
 idoso_IMC %>%  glimpse()
+readr::write_rds(idoso_IMC,"data/idoso_imc.rds")
+writexl::write_xlsx(idoso_IMC,"data/idoso_imc.xlsx")
