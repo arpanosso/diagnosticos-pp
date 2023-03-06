@@ -4,7 +4,7 @@ u_sisvan  <- "https://sisaps.saude.gov.br/sisvan/relatoriopublico/estadonutricio
 body_sisvan <- list(
   tpRelatorio="2",
   coVisualizacao="1",
-  nuAno="2009",
+  nuAno="2008",
   'nuMes[]' = "99", ####
   tpFiltro="M",
   coRegiao="",
@@ -12,11 +12,11 @@ body_sisvan <- list(
   coMunicipioIbge="99",
   noRegional= "",
   st_cobertura="99",
-  nu_ciclo_vida="3",
+  nu_ciclo_vida="2",
   nu_idade_inicio="",
   nu_idade_fim="-SELECIONE-",
-  nu_indice_cri="1",
-  nu_indice_ado="1",
+  nu_indice_cri="4",
+  nu_indice_ado="2",
   nu_idade_ges="99",
   ds_sexo2="1",
   ds_raca_cor2="99",
@@ -46,7 +46,7 @@ httr::content(r_sisvan, encoding = "UTF-8")  %>%
   mutate(across(where(is.numeric), as.character))
 
 # Criando a lista para os anos do estado nutiriconal
-lista_ano_estado_nutricional <- 2009:2022
+lista_ano_estado_nutricional <- 2008:2022
 ciclo_vida <- 3:4
 idade_inicio <- ""
 idade_fim <- "-SELECIONE-"
@@ -62,7 +62,7 @@ parametros_1 <- expand.grid(lista_ano_estado_nutricional,
 ciclo_vida <- 2
 idade_inicio <- ""
 idade_fim <- "-SELECIONE-"
-indice_cri="1"
+indice_cri="4"
 indice_ado=1:2
 parametros_2 <- expand.grid(lista_ano_estado_nutricional,
                             ciclo_vida,idade_inicio,
@@ -84,6 +84,7 @@ parametros_3 <- expand.grid(lista_ano_estado_nutricional,
   mutate(across(where(is.numeric), as.character))
 
 parametros = rbind(parametros_1,parametros_2,parametros_3)
+nrow(parametros)
 
 download_sisvan <- function(indice){
   ano = as.character(parametros[indice,1])
@@ -214,3 +215,14 @@ estado_nutricional <- estadonutricional %>%
   relocate(ano, fase_da_vida, idade, indice, indice_cri,indice_ado)
 
 readr::write_rds(estado_nutricional,"data-raw/estado_nutricional.rds")
+
+
+
+
+
+
+
+
+
+
+
